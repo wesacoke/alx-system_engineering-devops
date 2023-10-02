@@ -1,2 +1,2 @@
 #!/bin/bash
-echo Chicago | ./20-hiago
+echo "$line" | sed 's/[cC]//g'
