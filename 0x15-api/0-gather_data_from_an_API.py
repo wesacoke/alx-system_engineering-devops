@@ -10,7 +10,7 @@ if __name__ == "__main__":
     # Base URL for the JSONPlaceholder API
     url = "https://jsonplaceholder.typicode.com/"
 
-    employee_id = 1
+    employee_id = 2
 
     # Get the employee using the provided emoloyee ID
     params = {"userId": employee_id}
