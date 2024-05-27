@@ -1,33 +1,36 @@
 #!/usr/bin/python3
-"""
-Exports to-do list information for a given employee ID to CSV format.
-"""
+
+"""Import libraries"""
+
 import csv
 import requests
 import sys
 
+
+"""Import libraries"""
+
 if __name__ == "__main__":
-    # Define the base URL for the JSON API
-    url = "https://jsonplaceholder.typicode.com/"
+    user_id = int(sys.argv[1])
+    todos_url = "https://jsonplaceholder.typicode.com/todos"
+    users_url = "https://jsonplaceholder.typicode.com/users/{}".format(user_id)
 
-    user_id = 2
+    file_content = []
 
-    # Fetch user information from the API and
-    # convert the response to a JSON object
-    user = requests.get(url + "users/{}".format(user_id)).json()
+    todo_data = requests.get(todos_url).json()
 
-    # Extract the username from the user data
-    username = user.get("username")
+    employee_name = requests.get(users_url).json()["username"]
 
-    # Fetch the to-do list items associated with the
-    # giVen user ID  and convert the response to a JSON object
-    todos = requests.get(url + "todos", params={"userId": user_id}).json()
+    for todo in todo_data:
+        if user_id == todo["userId"]:
+            file_content.append(
+                [str(user_id), employee_name, todo["completed"],
+                 todo["title"]])
 
-    # Use list comprehension to iterate over the to-d- list items
-    # Write each item's details (user ID, username, cimetion status,
-    # and title) as a row in the CSV file
-    with open("{}.csv".format(user_id), "w", newline="")as csvfile:
-        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        [writer.writerow(
-            [user_id, username, t.get("completed"), t.get("title")]
-            ) for t in todos]
+    print(file_content)
+    file_name = "{}.csv".format(user_id)
+    with open(file_name, 'w', newline='') as csv_file:
+        write = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
+        for row in file_content:
+            for item in row:
+                str(item)
+            write.writerow(row)
